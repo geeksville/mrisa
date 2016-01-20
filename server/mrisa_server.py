@@ -38,15 +38,20 @@ def google_image_results_parser(code):
     soup = BeautifulSoup(code)
 
     # initialize 2d array
-    whole_array = {'links':[],
+    whole_array = {'pages':[],
+                   'images':[],
                    'description':[],
                    'title':[],
                    'result_qty':[]}
 
     # Links for all the search results
-    for li in soup.findAll('li', attrs={'class':'g'}):
-        sLink = li.find('a')
-        whole_array['links'].append(sLink['href'])
+    for jobj in soup.findAll('div', attrs={'class':'rg_meta'}):
+        s = jobj.get_text()
+        #print "jobj ", s
+        jobj = json.loads(s)
+        #print "PARSED ", jobj
+        whole_array['images'].append(jobj[u'ou'])
+        whole_array['pages'].append(jobj[u'ru'])
 
     # Search Result Description
     for desc in soup.findAll('span', attrs={'class':'st'}):
